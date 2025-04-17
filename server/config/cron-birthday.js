@@ -5,7 +5,8 @@ import cron from "node-cron";
 import apiConfig from "../../my-app/src/apiconfig/apiConfig.js";
 
 console.log("Cron job started for sending scheduled birthday emails.");
-cron.schedule('0 * * * *', async () => {
+// cron.schedule('0 * * * *', async () => {
+cron.schedule('*/1 * * * *', async () => {
     try {
         const nowUTC = new Date();
         const currentHour = nowUTC.getUTCHours();
