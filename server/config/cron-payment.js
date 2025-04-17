@@ -5,8 +5,7 @@ import apiConfig from "../../my-app/src/apiconfig/apiConfig.js";
 
 console.log("Cron job started for sending scheduled payment emails.");
 
-// Run every 1 minute
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('0 * * * *', async () => {
     try {
         const nowUTC = new Date();
         const currentUTCHour = nowUTC.getUTCHours();
@@ -32,17 +31,15 @@ cron.schedule('*/1 * * * *', async () => {
 
             // Filter students based on date match and lastSentDate check
             const studentsToSend = (camhistory.exceldata || []).filter(student => {
-                const studentDateRaw = student.additionalFields?.Date;
-                if (!studentDateRaw) return false;
-
-                const studentDateStr = new Date(studentDateRaw).toISOString().split("T")[0];
-                const lastSentDateStr = student.additionalFields?.lastSentDate
-                    ? new Date(student.additionalFields.lastSentDate).toISOString().split("T")[0]
-                    : null;
-
-                return studentDateStr === currentDateStr && lastSentDateStr !== currentDateStr;
+                if (!student.Date) return false; // Skip if no date exists
+            
+                const studentDateStr = student.Date.toString().slice(0, 10); // Ensure it's in YYYY-MM-DD format
+            
+                console.log("Comparing:", studentDateStr, currentDateStr);
+            
+                return studentDateStr === currentDateStr
             });
-
+            
             if (studentsToSend.length === 0) {
                 console.log(`No students matching today's date in campaign: ${camhistory.campaignname}`);
                 continue;
@@ -53,7 +50,7 @@ cron.schedule('*/1 * * * *', async () => {
                     if (!item.content) return item;
                     let updatedContent = item.content;
                     const studentData = {
-                        ...student,
+                        ...(student._doc || student),
                         ...student.additionalFields
                     };
 
@@ -82,9 +79,6 @@ cron.schedule('*/1 * * * *', async () => {
                     await axios.post(`${apiConfig.baseURL}/api/stud/sendbulkEmail`, emailData);
                     sentEmails.push(student.Email);
 
-                    // Set lastSentDate in additionalFields
-                    if (!student.additionalFields) student.additionalFields = {};
-                    student.additionalFields.lastSentDate = nowUTC.toISOString();
                 } catch (error) {
                     console.error(`❌ Failed to send email to ${student.Email}:`, error.message);
                     failedEmails.push(student.Email);
