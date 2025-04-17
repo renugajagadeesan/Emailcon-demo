@@ -7,6 +7,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import dotenv from 'dotenv';
 import './config/cron-scheduler.js'; 
 import './config/cron-birthday.js';
+import './config/cron-payment.js';
 import bodyParser from 'body-parser';
 
 // Load environment variables

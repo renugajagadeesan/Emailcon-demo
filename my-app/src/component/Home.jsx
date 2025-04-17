@@ -1181,11 +1181,14 @@ if (existingCampaigns.length > 0) {
           </div>
         )}
   <div>
-  <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
-    <CustomHourSelect
-  scheduledTime={scheduledTime}
-  setScheduledTime={setScheduledTime}
-/>
+     <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
+     <input
+      type="time"
+      id="schedule-time"
+      value={scheduledTime}
+      onChange={(e) => setScheduledTime(e.target.value)} // Only stores "HH:MM"
+    />
+
   </div>
 
 
