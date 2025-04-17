@@ -976,7 +976,7 @@ if (existingCampaigns.length > 0) {
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <span className="loader-create" style={{color:"white"}}></span> // Spinner
+                    <span className="loader-create-remainder"></span> // Spinner
                   ) : (
                     "Set Remainder"
                   )}{" "}
@@ -1197,7 +1197,7 @@ if (existingCampaigns.length > 0) {
                   disabled={isLoading}
                   >
                     {isLoading ? (
-                      <span className="loader-create" style={{color:"white"}}></span> // Spinner
+                      <span className="loader-create-remainder" ></span> // Spinner
                     ) : (
                       "Set Remainder"
                     )}{" "}

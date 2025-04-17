@@ -5,11 +5,12 @@ import cron from "node-cron";
 import apiConfig from "../../my-app/src/apiconfig/apiConfig.js";
 
 console.log("Cron job started for sending scheduled birthday emails.");
-// cron.schedule('0 * * * *', async () => {
+
 cron.schedule('*/1 * * * *', async () => {
     try {
         const nowUTC = new Date();
-        const currentHour = nowUTC.getUTCHours();
+        const currentUTCHour = nowUTC.getUTCHours();
+        const currentUTCMinute = nowUTC.getUTCMinutes();
         const currentYear = nowUTC.getUTCFullYear();
 
         console.log("Checking birthday campaigns at:", new Date().toLocaleString());
@@ -20,14 +21,19 @@ cron.schedule('*/1 * * * *', async () => {
         });
 
         const matchingCampaigns = camhistories.filter(camhistory => {
-            const scheduledHour = new Date(camhistory.scheduledTime).getUTCHours();
-            return scheduledHour === currentHour;
+            const scheduled = new Date(camhistory.scheduledTime);
+            return (
+                scheduled.getUTCHours() === currentUTCHour &&
+                scheduled.getUTCMinutes() === currentUTCMinute
+            );
         });
 
         if (matchingCampaigns.length === 0) {
-            console.log("No birthday campaigns scheduled for this hour.");
+            console.log("No birthday campaigns scheduled for this exact time.");
             return;
         }
+
+        console.log(`Matched campaigns: ${matchingCampaigns.map(c => c.campaignname).join(", ")}`);
 
         await Promise.allSettled(matchingCampaigns.map(async (camhistory) => {
             const groupId = camhistory.groupId?.trim();
@@ -44,7 +50,7 @@ cron.schedule('*/1 * * * *', async () => {
                 if (!student.Date) return false;
 
                 const dob = new Date(student.Date);
-                const lastSent = student.lastSentYear || 0; // Add this field in DB later
+                const lastSent = student.lastSentYear || 0;
 
                 return (
                     dob.getDate() === todayDate &&
@@ -97,7 +103,7 @@ cron.schedule('*/1 * * * *', async () => {
                     await axios.post(`${apiConfig.baseURL}/api/stud/sendbulkEmail`, emailData);
                     sentEmails.push(student.Email);
 
-                    // Optional: Save lastSentYear in DB via API
+                    // Update last sent year for this student
                     await axios.put(`${apiConfig.baseURL}/api/stud/updateStudent/${student._id}`, {
                         lastSentYear: currentYear
                     });
