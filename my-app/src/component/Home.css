@@ -809,7 +809,11 @@ li {
   border: none;
   /* cursor: not-allowed; */
 }
+.time-option{
+  height: 150px !important;
+  overflow-y: auto !important;
 
+}
 .loader-create {
   border: 3px solid transparent;
   border-top: 3px solid #2f327d !important;

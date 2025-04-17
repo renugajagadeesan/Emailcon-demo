@@ -87,13 +87,20 @@ cron.schedule('*/10 * * * *', async () => {
                     const personalizedContent = camhistory.previewContent.map(item => {
                         if (!item.content) return item;
                         let updatedContent = item.content;
-                        const studentData = student._doc || student;
+                    
+                        const studentData = {
+                            ...(student._doc || student),
+                            ...student.additionalFields
+                        };
+                    
                         Object.entries(studentData).forEach(([key, value]) => {
-                            const placeholderRegex = new RegExp(`\{${key.trim()}\}`, "gi");
+                            const placeholderRegex = new RegExp(`\\{${key.trim()}\\}`, "gi");
                             updatedContent = updatedContent.replace(placeholderRegex, value != null ? String(value).trim() : "");
                         });
+                    
                         return { ...item, content: updatedContent };
                     });
+                    
                     
                     const emailData = {
                         recipientEmail: student.Email,

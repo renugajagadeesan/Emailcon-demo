@@ -29,6 +29,7 @@ import GroupfilesingleModal from "./GroupfilesingleModal.jsx";
 import * as XLSX from "xlsx";
 import { FaInfoCircle } from "react-icons/fa";
 import sampleexcel from "../Images/excelsheet.png";
+import CustomHourSelect from "./CustomHourSelect.jsx";
 
 const Home = () => {
   const [view, setView] = useState("main");
@@ -963,12 +964,10 @@ if (existingCampaigns.length > 0) {
 
   <div>
     <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
-    <input
-      type="time"
-      id="schedule-time"
-      value={scheduledTime}
-      onChange={(e) => setScheduledTime(e.target.value)} // Only stores "HH:MM"
-    />
+    <CustomHourSelect
+  scheduledTime={scheduledTime}
+  setScheduledTime={setScheduledTime}
+/>
   </div>
                 <div className="auto-actions-unique">
                   <button
@@ -1182,13 +1181,11 @@ if (existingCampaigns.length > 0) {
           </div>
         )}
   <div>
-    <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
-    <input
-      type="time"
-      id="schedule-time"
-      value={scheduledTime}
-      onChange={(e) => setScheduledTime(e.target.value)} // Only stores "HH:MM"
-    />
+  <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
+    <CustomHourSelect
+  scheduledTime={scheduledTime}
+  setScheduledTime={setScheduledTime}
+/>
   </div>
 
 
