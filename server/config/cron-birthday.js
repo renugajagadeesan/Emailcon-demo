@@ -107,7 +107,7 @@ cron.schedule('0 * * * *', async () => {
                 }
             }));
 
-            const total = camhistory.totalEmails || 0;
+            const total = camhistory.totalcount || 0;
             const progress = total > 0 ? Math.round((sentEmails.length / total) * 100) : 0;
 
             await axios.put(`${apiConfig.baseURL}/api/stud/camhistory/${camhistory._id}`, {
@@ -116,7 +116,6 @@ cron.schedule('0 * * * *', async () => {
                 sentEmails,
                 failedEmails,
                 status: "Remainder On",
-                lastSentYear: currentYear,
                 progress
             });
 
