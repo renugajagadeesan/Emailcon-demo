@@ -23,7 +23,7 @@ cron.schedule('0 * * * *', async () => {
         const matchingCampaigns = camhistories.filter(camhistory => {
             const scheduled = new Date(camhistory.scheduledTime);
             return (
-                scheduled.getUTCHours() === currentUTCHour &&
+                scheduled.getUTCHours() === currentUTCHour ||
                 scheduled.getUTCMinutes() === currentUTCMinute
             );
         });
