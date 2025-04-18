@@ -278,9 +278,10 @@ router.post('/sendtestmail', async (req, res) => {
     const trackingPixel = `<img src="https://emailcon-demo-backend.onrender.com/api/stud/track-email-open?emailId=${encodeURIComponent(emailData.recipient)}&userId=${userId}&campaignId=${campaignId}&t=${Date.now()}" width="1" height="1" style="display:none;" />`;
 
     const mailOptions = {
-      from: `"${emailData.aliasName}" <${email}>`,
+      from: `"${emailData.aliasName}" <megarajan55@gmail.com>`,
       to: emailData.recipient,
       subject: emailData.subject,
+      replyTo:"megarajan55@gmail.com",
       attachments: Attachments,
 
       html: `
