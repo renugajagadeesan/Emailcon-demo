@@ -18,7 +18,7 @@ export const updateStatus = async (req, res) => {
   );
 
   const mailOptions = {
-    from: `"Emailcon Support" <megarajan55@gmail.com>`,
+    from: `"Emailcon Support" <emailcon.01012000@gmail.com>`,
     to: user.email,
     subject: `Account ${status ? "Activated" : "Deactivated"}`,
     html: `

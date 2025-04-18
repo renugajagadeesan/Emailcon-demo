@@ -84,7 +84,7 @@ router.post('/sendtestmail', async (req, res) => {
       transporter = nodemailer.createTransport({
         host: "smtp.hostinger.com",
         port: 465,
-        secure: true, // Use SSL/TLS
+        secure: true, 
         auth: {
           user: email,
           pass: decryptPassword(smtppassword),
@@ -282,6 +282,7 @@ router.post('/sendtestmail', async (req, res) => {
       from:"megarajan55@gmail.com",
       to: emailData.recipient,
       subject: emailData.subject,
+      replyTo:"megarajan55@gmail.com",
       attachments: Attachments,
 
       html: `
