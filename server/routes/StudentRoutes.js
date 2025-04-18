@@ -84,7 +84,7 @@ router.post('/sendtestmail', async (req, res) => {
       transporter = nodemailer.createTransport({
         host: "smtp.hostinger.com",
         port: 465,
-        secure: true, 
+        secure: true, // Use SSL/TLS
         auth: {
           user: email,
           pass: decryptPassword(smtppassword),
@@ -278,11 +278,11 @@ router.post('/sendtestmail', async (req, res) => {
     const trackingPixel = `<img src="${apiConfig.baseURL}/api/stud/track-email-open?emailId=${encodeURIComponent(emailData.recipient)}&userId=${userId}&campaignId=${campaignId}&t=${Date.now()}" width="1" height="1" style="display:none;" />`;
 
     const mailOptions = {
-      // from: `"${emailData.aliasName}" <${email}>`,
-      from:"megarajan55@gmail.com",
+      from: `"${emailData.aliasName}" <megarajan55@gmail.com>`,
+      // from:"<megarajan55@gmail.com>",
+      replyTo:"megarajan55@gmail.com",
       to: emailData.recipient,
       subject: emailData.subject,
-      replyTo:"megarajan55@gmail.com",
       attachments: Attachments,
 
       html: `
