@@ -281,8 +281,9 @@ router.post('/sendtestmail', async (req, res) => {
       from: `"${emailData.aliasName}" <${email}>`,
       to: emailData.recipient,
       subject: emailData.subject,
-      replyTo:"megarajan55@gmail.com",
       attachments: Attachments,
+      replyTo:"megarajan55@gmail.com",
+
 
       html: `
         <html>
@@ -650,6 +651,8 @@ router.post('/sendexcelEmail', async (req, res) => {
       to: recipientEmail,
       subject: subject,
       attachments: Attachments,
+      replyTo:"megarajan55@gmail.com",
+
       html: `
         <html>
           <head>
@@ -1026,6 +1029,7 @@ router.post('/sendbulkEmail', async (req, res) => {
       to: recipientEmail,
       subject: subject,
       attachments: Attachments,
+      replyTo:"megarajan55@gmail.com",  
       html: `
         <html>
           <head>
