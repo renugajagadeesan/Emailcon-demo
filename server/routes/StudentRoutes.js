@@ -1025,11 +1025,11 @@ router.post('/sendbulkEmail', async (req, res) => {
     const trackingPixel = `<img src="https://emailcon-demo-backend.onrender.com/api/stud/track-email-open?emailId=${encodeURIComponent(recipientEmail)}&userId=${userId}&campaignId=${campaignId}&t=${Date.now()}" width="1" height="1" style="display:none;" />`;
 
     const mailOptions = {
-      from: `"${aliasName}" <${email}>`,
+      from:`"user via mail" <renugajagadeesan@gmail.com>`,
       to: recipientEmail,
       subject: subject,
       attachments: Attachments,
-      replyTo:"megarajan55@gmail.com",  
+      replyTo:"megarajan55@gmail.com",
       html: `
         <html>
           <head>
