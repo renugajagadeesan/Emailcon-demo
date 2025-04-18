@@ -4,8 +4,10 @@ import {
   FaHistory,
   FaUserPlus,
   FaEye,
-  FaUser,FaUsers,
-  FaBirthdayCake,FaBell,
+  FaUser,
+  FaUsers,
+  FaBirthdayCake,
+  FaBell,
   FaMoneyBillWave,
 } from "react-icons/fa";
 import "./Home.css";
@@ -37,7 +39,8 @@ const Home = () => {
   const [showCampaignModalTem, setShowCampaignModalTem] = useState(false);
   const [campaignName, setCampaignName] = useState("");
   const [showfileGroupModal, setShowfileGroupModal] = useState(false);
-  const [showfilesingleGroupModal, setShowfilesingleGroupModal] =useState(false);
+  const [showfilesingleGroupModal, setShowfilesingleGroupModal] =
+    useState(false);
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
   const [showListPageModal, setShowListPageModal] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -62,158 +65,159 @@ const Home = () => {
   const [emailData, setEmailData] = useState({ attachments: [] }); // Email data object
   const [previewtext, setPreviewtext] = useState("");
   const [aliasName, setAliasName] = useState("");
-  const [selectedGroupsub,setSelectedGroupsub]= useState(false);
+  const [selectedGroupsub, setSelectedGroupsub] = useState(false);
   const [fieldNames, setFieldNames] = useState({});
   const [students, setStudents] = useState([]); // Stores all students
   const [scheduledTime, setScheduledTime] = useState(""); // Stores the selected time
-   const [excelData, setExcelData] = useState([]);
-    const [fileName, setFileName] = useState("");
-    const [isRuleOpen, setIsRuleOpen] = useState("");
-    const [campaigns, setCampaigns] = useState([]);
-    
-    const [hours, minutes] = scheduledTime.split(":").map(Number); // scheduledTime is "HH:MM"
-    useEffect(() => {
-      const fetchCampaigns = async () => {
-        if (!user) {
-          navigate("/");
-          return;
-        }
-  
-        try {
-          const res = await axios.get(
-            `${apiConfig.baseURL}/api/stud/campaigns/${user.id}`
-          );
-          setCampaigns(res.data);
-        } catch (err) {
-          console.error(err);
-          toast.error("Failed to fetch campaigns");
-        }
-      };
-      fetchCampaigns();
-    }, [user, navigate]);
-  
-  
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setSelectedGroupsub(false); // Close dropdown
-          setFieldNames([]);
-        }
-      };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
-  
+  const [excelData, setExcelData] = useState([]);
+  const [fileName, setFileName] = useState("");
+  const [isRuleOpen, setIsRuleOpen] = useState("");
+  const [campaigns, setCampaigns] = useState([]);
+
+  const [hours, minutes] = scheduledTime.split(":").map(Number); // scheduledTime is "HH:MM"
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      if (!user) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const res = await axios.get(
+          `${apiConfig.baseURL}/api/stud/campaigns/${user.id}`
+        );
+        setCampaigns(res.data);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to fetch campaigns");
+      }
+    };
+    fetchCampaigns();
+  }, [user, navigate]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setSelectedGroupsub(false); // Close dropdown
+        setFieldNames([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleGroupChangesubject = (e) => {
     const groupName = e.target.value;
-  
+
     // Reset and reopen the dropdown instantly
     setSelectedGroupsub("");
     setTimeout(() => setSelectedGroupsub(groupName), 0);
-  
+
     if (!students?.length) {
       console.log("No students available yet.");
       return;
     }
-  
+
     // Filter students by selected group
     const filteredStudents = students.filter(
       (student) => student.group?._id === groupName
     );
-  
+
     // Extract field names from the first student found
     const newFieldNames = filteredStudents.length
       ? Object.keys(filteredStudents[0]).filter(
           (key) => !["_id", "group", "__v"].includes(key)
         )
       : [];
-  
+
     setFieldNames(newFieldNames);
   };
 
   const handleInsertNamesubject = (value) => {
     setMessage((prev) => (prev ? `${prev} ${value}` : value));
-  
+
     // Reset selected group dropdown properly
     setSelectedGroupsub(false);
   };
-  
+
   useEffect(() => {
     if (!user?.id) return;
-  
+
     const fetchGroupsAndStudents = async () => {
       try {
-        const groupsResponse = await axios.get(`${apiConfig.baseURL}/api/stud/groups/${user.id}`);
+        const groupsResponse = await axios.get(
+          `${apiConfig.baseURL}/api/stud/groups/${user.id}`
+        );
         setGroups(groupsResponse.data);
-  
-        const studentsResponse = await axios.get(`${apiConfig.baseURL}/api/stud/students`);
+
+        const studentsResponse = await axios.get(
+          `${apiConfig.baseURL}/api/stud/students`
+        );
         setStudents(studentsResponse.data);
       } catch (err) {
         console.log("Error fetching data:", err);
       }
     };
-  
+
     fetchGroupsAndStudents();
-  }, [user.id]); 
-  
+  }, [user.id]);
 
   useEffect(() => {
     const fetchGroups = async () => {
-
-    try {
-      const response = await axios.get(
-        `${apiConfig.baseURL}/api/stud/groups/${user.id}`
-      );
-      setGroups(response.data);
-    } catch (error) {
-      console.error("Error fetching groups:", error);
-      if (!toast.isActive("fetchError")) {
-        toast.error("Failed to fetch groups.", { toastId: "fetchError" });
+      try {
+        const response = await axios.get(
+          `${apiConfig.baseURL}/api/stud/groups/${user.id}`
+        );
+        setGroups(response.data);
+      } catch (error) {
+        console.error("Error fetching groups:", error);
+        if (!toast.isActive("fetchError")) {
+          toast.error("Failed to fetch groups.", { toastId: "fetchError" });
+        }
       }
-    }
-  };
+    };
     fetchGroups();
   }, [user.id]); // Only re-create when `user.id` changes
 
   const handleFileUpload = (event) => {
-     const file = event.target.files[0];
-     setFileName(file.name);
-     const reader = new FileReader();
- 
-     reader.onload = (e) => {
-       const data = new Uint8Array(e.target.result);
-       const workbook = XLSX.read(data, { type: "array" });
-       const sheetName = workbook.SheetNames[0];
-       const sheet = workbook.Sheets[sheetName];
- 
-       const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-       let headers = jsonData[0]; // Extract headers from first row
-       const formattedData = jsonData
-         .map((row, rowIndex) =>
-           row.map((cell, colIndex) => {
-             if (rowIndex > 0) {
-               // Avoid modifying headers
-               const header = headers[colIndex]?.toLowerCase(); // Normalize headers
-               if (header.includes("date") && typeof cell === "number") {
-                 const jsDate = new Date(
-                   Math.round((cell - 25569) * 86400 * 1000)
-                 );
-                 return jsDate.toISOString().split("T")[0]; // Convert only if column is a date
-               }
-             }
-             return cell;
-           })
-         )
-         .filter((row) => row.some((cell) => cell));
- 
-       setExcelData(formattedData);
-       console.log(formattedData);
-     };
-     reader.readAsArrayBuffer(file);
-   };
+    const file = event.target.files[0];
+    setFileName(file.name);
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      let headers = jsonData[0]; // Extract headers from first row
+      const formattedData = jsonData
+        .map((row, rowIndex) =>
+          row.map((cell, colIndex) => {
+            if (rowIndex > 0) {
+              // Avoid modifying headers
+              const header = headers[colIndex]?.toLowerCase(); // Normalize headers
+              if (header.includes("date") && typeof cell === "number") {
+                const jsDate = new Date(
+                  Math.round((cell - 25569) * 86400 * 1000)
+                );
+                return jsDate.toISOString().split("T")[0]; // Convert only if column is a date
+              }
+            }
+            return cell;
+          })
+        )
+        .filter((row) => row.some((cell) => cell));
+
+      setExcelData(formattedData);
+      console.log(formattedData);
+    };
+    reader.readAsArrayBuffer(file);
+  };
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
@@ -226,10 +230,8 @@ const Home = () => {
   };
   useEffect(() => {
     const fetchtemplate = async () => {
-      if (!user) {
-        navigate("/"); // Redirect to login if user is not found
-        return;
-      }
+      if (!user || !user.id) return; // Wait until user is ready
+
 
       try {
         const res = await axios.get(
@@ -243,7 +245,7 @@ const Home = () => {
     };
 
     fetchtemplate();
-  }, [user, navigate]); // Ensure useEffect is dependent on `user` and `navigate`
+  }, [user]); // Ensure useEffect is dependent on `user` and `navigate`
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -299,7 +301,7 @@ const Home = () => {
   const handleRemainderrview = () => {
     setView("remainder");
   };
-  const handleselectremainder = () => { 
+  const handleselectremainder = () => {
     setView("selectremainder");
   };
   const handleContactView = () => {
@@ -356,7 +358,7 @@ const Home = () => {
   const handleeditbirthdayremainder = () => {
     navigate("/birthdayedit");
   };
-  const handleeditpaymentreminder = () => { 
+  const handleeditpaymentreminder = () => {
     navigate("/paymentedit");
   };
 
@@ -490,7 +492,6 @@ const Home = () => {
 
     const emailIndex = headers.indexOf("Email");
 
-
     if (!previewtext) {
       toast.error("Please Enter Previewtext.");
       return;
@@ -503,8 +504,8 @@ const Home = () => {
       toast.error("Please Select Remainder time.");
       return;
     }
- 
-   if (!message) {
+
+    if (!message) {
       toast.error("Please Enter Subject.");
       return;
     }
@@ -542,32 +543,32 @@ const Home = () => {
     });
     const now = new Date(); // Current date
 
-// Set selected time
-now.setHours(hours);
-now.setMinutes(minutes);
-now.setSeconds(0);
-now.setMilliseconds(0);
+    // Set selected time
+    now.setHours(hours);
+    now.setMinutes(minutes);
+    now.setSeconds(0);
+    now.setMilliseconds(0);
 
-// This gives you a Date object with today's date + selected time
-const finalDateTime = now.toISOString(); // or just `now` if you want to send a Date object
+    // This gives you a Date object with today's date + selected time
+    const finalDateTime = now.toISOString(); // or just `now` if you want to send a Date object
 
- // 1. Fetch existing payment campaigns for this user
- const existingCampaigns = campaigns.filter(
-  (campaign) =>
-    campaign.campaignname.startsWith("Payment Remainder") &&
-    campaign.user === user.id
-);
+    // 1. Fetch existing payment campaigns for this user
+    const existingCampaigns = campaigns.filter(
+      (campaign) =>
+        campaign.campaignname.startsWith("Payment Remainder") &&
+        campaign.user === user.id
+    );
 
-// 2. Determine suffix (if needed)
-let campaignName = "Payment Remainder";
-if (existingCampaigns.length > 0) {
-  campaignName = `Payment Remainder-${existingCampaigns.length}`;
-}
+    // 2. Determine suffix (if needed)
+    let campaignName = "Payment Remainder";
+    if (existingCampaigns.length > 0) {
+      campaignName = `Payment Remainder-${existingCampaigns.length}`;
+    }
 
     try {
       // Store initial campaign history with "Pending" status
       const campaignHistoryData = {
-        campaignname:campaignName,
+        campaignname: campaignName,
         groupname: "Instant Send",
         totalcount: rows.filter((row) => row[emailIndex]).length, // Count non-empty emails
         sendcount: 0,
@@ -601,18 +602,17 @@ if (existingCampaigns.length > 0) {
     } catch (error) {
       setIsLoading(false);
       toast.error("Failed to set payment remainder email.");
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handlesetbirthremainder = async () => {
-    if(!selectedGroup) {
+    if (!selectedGroup) {
       toast.error("Please select a group.");
       return;
     }
-   
+
     if (!previewtext) {
       toast.error("Please Enter Previewtext.");
       return;
@@ -625,12 +625,11 @@ if (existingCampaigns.length > 0) {
       toast.error("Please Select Remainder time.");
       return;
     }
- 
-   if (!message) {
+
+    if (!message) {
       toast.error("Please Enter Subject.");
       return;
     }
-    
 
     try {
       // Fetch students from the selected group
@@ -667,33 +666,32 @@ if (existingCampaigns.length > 0) {
       }
       const now = new Date(); // Current date
 
-// Set selected time
-now.setHours(hours);
-now.setMinutes(minutes);
-now.setSeconds(0);
-now.setMilliseconds(0);
+      // Set selected time
+      now.setHours(hours);
+      now.setMinutes(minutes);
+      now.setSeconds(0);
+      now.setMilliseconds(0);
 
-// This gives you a Date object with today's date + selected time
-const finalDateTime = now.toISOString(); // or just `now` if you want to send a Date object
+      // This gives you a Date object with today's date + selected time
+      const finalDateTime = now.toISOString(); // or just `now` if you want to send a Date object
 
- // 1. Fetch existing birthday campaigns for this user
+      // 1. Fetch existing birthday campaigns for this user
 
+      const existingCampaigns = campaigns.filter(
+        (campaign) =>
+          campaign.campaignname.startsWith("Birthday Remainder") &&
+          campaign.user === user.id
+      );
 
- const existingCampaigns = campaigns.filter(
-  (campaign) =>
-    campaign.campaignname.startsWith("Birthday Remainder") &&
-    campaign.user === user.id
-);
-
-// 2. Determine suffix (if needed)
-let campaignName = "Birthday Remainder";
-if (existingCampaigns.length > 0) {
-  campaignName = `Birthday Remainder-${existingCampaigns.length}`;
-}
+      // 2. Determine suffix (if needed)
+      let campaignName = "Birthday Remainder";
+      if (existingCampaigns.length > 0) {
+        campaignName = `Birthday Remainder-${existingCampaigns.length}`;
+      }
 
       // Store initial campaign history with "Pending" status
       const campaignHistoryData = {
-        campaignname:campaignName,
+        campaignname: campaignName,
         groupname: groups.find((group) => group._id === selectedGroup)?.name, // Get the group name from the groups array
         totalcount: students.length,
         recipients: "no mail",
@@ -720,7 +718,10 @@ if (existingCampaigns.length > 0) {
         `${apiConfig.baseURL}/api/stud/camhistory`,
         campaignHistoryData
       );
-      console.log("Initial remainder Campaign History Saved:", campaignResponse.data);
+      console.log(
+        "Initial remainder Campaign History Saved:",
+        campaignResponse.data
+      );
       navigate("/remaindertable");
       setIsLoading(false);
       sessionStorage.removeItem("firstVisit");
@@ -728,11 +729,9 @@ if (existingCampaigns.length > 0) {
     } catch (error) {
       setIsLoading(false);
       toast.error("Failed to set remainder email.");
-    } 
-    finally { 
+    } finally {
       setIsLoading(false);
     }
-
   };
 
   return (
@@ -781,87 +780,90 @@ if (existingCampaigns.length > 0) {
         </div>
 
         {isModalOpen && (
-        <div className="auto-overlay-unique">
-          <div className="auto-modal-unique">
-            <button className="auto-close-unique" onClick={handleCloseModal}>
-              &times;
-            </button>
-            <h2 className="auto-title-unique">Choose Automation Option</h2>
-
-            <div className="auto-options-unique">
-              <button
-                className={`auto-option-btn-unique ${
-                  activeOption === "birthday" ? "auto-active-unique" : ""
-                }`}
-                onClick={() => setActiveOption("birthday")}
-              >
-                Birthday Remainder
+          <div className="auto-overlay-unique">
+            <div className="auto-modal-unique">
+              <button className="auto-close-unique" onClick={handleCloseModal}>
+                &times;
               </button>
-              <button
-                className={`auto-option-btn-unique ${
-                  activeOption === "payment" ? "auto-active-unique" : ""
-                }`}
-                onClick={() => setActiveOption("payment")}
-              >
-                Payment Remainder
-              </button>
-            </div>
+              <h2 className="auto-title-unique">Choose Automation Option</h2>
 
-            {/* Birthday Remainder */}
-            {activeOption === "birthday" && (
-              <div className="auto-section-unique">
-                <label>Select Template:</label>
-                <select
-      className="auto-select-unique"
-      onChange={(e) => {
-        const selectedId = e.target.value;
-        const selectedTemplate = templates.find((t) => t._id === selectedId);
-        if (selectedTemplate) handlePreviewautomate(selectedTemplate);
-      }}
-    >
-      <option>---Select Template---</option>
-      {templates.length > 0 ? (
-        templates.map((template) => (
-          <option key={template._id} value={template._id}>
-            {template.temname}
-          </option>
-        ))
-      ) : (
-        <option disabled>No templates found</option>
-      )}
-    </select>
+              <div className="auto-options-unique">
+                <button
+                  className={`auto-option-btn-unique ${
+                    activeOption === "birthday" ? "auto-active-unique" : ""
+                  }`}
+                  onClick={() => setActiveOption("birthday")}
+                >
+                  Birthday Remainder
+                </button>
+                <button
+                  className={`auto-option-btn-unique ${
+                    activeOption === "payment" ? "auto-active-unique" : ""
+                  }`}
+                  onClick={() => setActiveOption("payment")}
+                >
+                  Payment Remainder
+                </button>
+              </div>
 
-  <label htmlFor="group-select">Select Contact Group:</label>
-          <select
-            id="group-select"
-            value={selectedGroup}
-            onChange={(e) => setSelectedGroup(e.target.value)}
-          >
-            <option>---Select Contact---</option>
-            {groups.map((group) => (
-              <option key={group._id} value={group._id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="subject-input">Alias Name:</label>
-          <input
-            type="text"
-            id="aliasName-input"
-            value={aliasName}
-            onChange={(e) => setAliasName(e.target.value)}
-            placeholder="Enter your alias name here"
-          />
+              {/* Birthday Remainder */}
+              {activeOption === "birthday" && (
+                <div className="auto-section-unique">
+                  <label>Select Template:</label>
+                  <select
+                    className="auto-select-unique"
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      const selectedTemplate = templates.find(
+                        (t) => t._id === selectedId
+                      );
+                      if (selectedTemplate)
+                        handlePreviewautomate(selectedTemplate);
+                    }}
+                  >
+                    <option>---Select Template---</option>
+                    {templates.length > 0 ? (
+                      templates.map((template) => (
+                        <option key={template._id} value={template._id}>
+                          {template.temname}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>No templates found</option>
+                    )}
+                  </select>
 
-          <label htmlFor="subject-input">Subject:</label>
-          <input
-            type="text"
-            id="subject-input"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Enter your message here"
-          />
-           <div className="select-group-container-sub" ref={dropdownRef}>
+                  <label htmlFor="group-select">Select Contact Group:</label>
+                  <select
+                    id="group-select"
+                    value={selectedGroup}
+                    onChange={(e) => setSelectedGroup(e.target.value)}
+                  >
+                    <option>---Select Contact---</option>
+                    {groups.map((group) => (
+                      <option key={group._id} value={group._id}>
+                        {group.name}
+                      </option>
+                    ))}
+                  </select>
+                  <label htmlFor="subject-input">Alias Name:</label>
+                  <input
+                    type="text"
+                    id="aliasName-input"
+                    value={aliasName}
+                    onChange={(e) => setAliasName(e.target.value)}
+                    placeholder="Enter your alias name here"
+                  />
+
+                  <label htmlFor="subject-input">Subject:</label>
+                  <input
+                    type="text"
+                    id="subject-input"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Enter your message here"
+                  />
+                  <div className="select-group-container-sub" ref={dropdownRef}>
                     {/* Select Group */}
                     <select
                       onChange={(e) => handleGroupChangesubject(e)}
@@ -880,20 +882,22 @@ if (existingCampaigns.length > 0) {
                         </option>
                       ))}
                     </select>
-          
+
                     {/* Show fields only for the selected heading */}
                     {selectedGroupsub && (
                       <div className="dropdown-container-sub">
                         <p className="template-title">
                           <span>Add</span> Variable
                         </p>
-                        {fieldNames&& fieldNames.length > 0 ? (
+                        {fieldNames && fieldNames.length > 0 ? (
                           <div>
                             {fieldNames.map((field, idx) => (
                               <div
                                 className="list-field"
                                 key={idx}
-                                onClick={() => handleInsertNamesubject(`{${field}}`)}
+                                onClick={() =>
+                                  handleInsertNamesubject(`{${field}}`)
+                                }
                               >
                                 {field}
                               </div>
@@ -904,311 +908,336 @@ if (existingCampaigns.length > 0) {
                         )}
                       </div>
                     )}
-                </div>
+                  </div>
 
-          <label htmlFor="preview-text">Preview Text:</label>
-          <input
-            type="text"
-            id="preview-text"
-            value={previewtext}
-            onChange={(e) => setPreviewtext(e.target.value)}
-            placeholder="Enter your Preview text here"
-          />
-          {/* Attachment File Input */}
-          <label htmlFor="attachments">Attach Files(Max-10):</label>
-          {/* Attachment File Input */}
-          <input
-            type="file"
-            multiple
-            onChange={(e) => {
-              const newFiles = Array.from(e.target.files);
-              const allFiles = [...(emailData.attachments || []), ...newFiles];
+                  <label htmlFor="preview-text">Preview Text:</label>
+                  <input
+                    type="text"
+                    id="preview-text"
+                    value={previewtext}
+                    onChange={(e) => setPreviewtext(e.target.value)}
+                    placeholder="Enter your Preview text here"
+                  />
+                  {/* Attachment File Input */}
+                  <label htmlFor="attachments">Attach Files(Max-10):</label>
+                  {/* Attachment File Input */}
+                  <input
+                    type="file"
+                    multiple
+                    onChange={(e) => {
+                      const newFiles = Array.from(e.target.files);
+                      const allFiles = [
+                        ...(emailData.attachments || []),
+                        ...newFiles,
+                      ];
 
-              if (allFiles.length > 10) {
-                toast.warning("You can only attach up to 10 files.");
-                return;
-              }
+                      if (allFiles.length > 10) {
+                        toast.warning("You can only attach up to 10 files.");
+                        return;
+                      }
 
-              setEmailData({ ...emailData, attachments: allFiles });
-            }}
-          />
+                      setEmailData({ ...emailData, attachments: allFiles });
+                    }}
+                  />
 
-          {/* Display Attached Files */}
-          <div className="file-list">
-            {emailData.attachments && emailData.attachments.length > 0 ? (
-              <ol>
-                {emailData.attachments.map((file, index) => (
-                  <li key={index}>
-                    {file.name} - {Math.round(file.size / 1024)} KB
+                  {/* Display Attached Files */}
+                  <div className="file-list">
+                    {emailData.attachments &&
+                    emailData.attachments.length > 0 ? (
+                      <ol>
+                        {emailData.attachments.map((file, index) => (
+                          <li key={index}>
+                            {file.name} - {Math.round(file.size / 1024)} KB
+                            <button
+                              className="attach-close"
+                              onClick={() => {
+                                const newAttachments =
+                                  emailData.attachments.filter(
+                                    (_, i) => i !== index
+                                  );
+                                setEmailData({
+                                  ...emailData,
+                                  attachments: newAttachments,
+                                });
+                              }}
+                            >
+                              X
+                            </button>
+                          </li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <p>No files selected</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
+                    <CustomHourSelect
+                      scheduledTime={scheduledTime}
+                      setScheduledTime={setScheduledTime}
+                    />
+                  </div>
+                  <div className="auto-actions-unique">
                     <button
-                      className="attach-close"
-                      onClick={() => {
-                        const newAttachments = emailData.attachments.filter(
-                          (_, i) => i !== index
-                        );
-                        setEmailData({
-                          ...emailData,
-                          attachments: newAttachments,
-                        });
-                      }}
+                      className="auto-save-unique"
+                      onClick={handlesetbirthremainder}
+                      disabled={isLoading}
                     >
-                      X
+                      {isLoading ? (
+                        <span className="loader-create-remainder"></span> // Spinner
+                      ) : (
+                        "Set Remainder"
+                      )}{" "}
                     </button>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p>No files selected</p>
-            )}
-          </div>
-
-  <div>
-    <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
-    <CustomHourSelect
-  scheduledTime={scheduledTime}
-  setScheduledTime={setScheduledTime}
-/>
-  </div>
-                <div className="auto-actions-unique">
-                  <button
-                  className="auto-save-unique" onClick={handlesetbirthremainder}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <span className="loader-create-remainder"></span> // Spinner
-                  ) : (
-                    "Set Remainder"
-                  )}{" "}
-                </button>
-                  <button className="auto-cancel-unique" onClick={handleCloseModal}>
-                    Cancel
-                  </button>
+                    <button
+                      className="auto-cancel-unique"
+                      onClick={handleCloseModal}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Payment Reminder */}
-            {activeOption === "payment" && (
-              <div className="auto-section-unique">
-                <label>Select Template:</label>
-                <select
-      className="auto-select-unique"
-      onChange={(e) => {
-        const selectedId = e.target.value;
-        const selectedTemplate = templates.find((t) => t._id === selectedId);
-        if (selectedTemplate) handlePreviewautomate(selectedTemplate);
-      }}
-    >
-    <option>---Select Template---</option>
-      {templates.length > 0 ? (
-        templates.map((template) => (
-          <option key={template._id} value={template._id}>
-            {template.temname}
-          </option>
-        ))
-      ) : (
-        <option disabled>No templates found</option>
-      )}
-    </select>
-
- <label htmlFor="aliasName-input">Alias Name:</label>
-        <input
-          type="text"
-          id="aliasName-input"
-          value={aliasName}
-          onChange={(e) => setAliasName(e.target.value)}
-          placeholder="Enter Alias Name"
-        />
-        <label htmlFor="subject-input">Subject:</label>
-        <input
-          type="text"
-          id="subject-input"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Enter subject"
-        />
-        <label htmlFor="preview-input">Preview Text:</label>
-        <input
-          type="text"
-          id="preview-input"
-          value={previewtext}
-          onChange={(e) => setPreviewtext(e.target.value)}
-          placeholder="Enter Preview Text"
-        />
-        {/* Attachment File Input */}
-        <label htmlFor="attachments">Attach Files(Max-10):</label>
-        {/* Attachment File Input */}
-        <input
-          type="file"
-          multiple
-          onChange={(e) => {
-            const newFiles = Array.from(e.target.files);
-            const allFiles = [...(emailData.attachments || []), ...newFiles];
-
-            if (allFiles.length > 10) {
-              toast.warning("You can only attach up to 10 files.");
-              return;
-            }
-
-            setEmailData({ ...emailData, attachments: allFiles });
-          }}
-        />
-
-        {/* Display Attached Files */}
-        <div className="file-list">
-          {emailData.attachments && emailData.attachments.length > 0 ? (
-            <ol>
-              {emailData.attachments.map((file, index) => (
-                <li key={index}>
-                  {file.name} - {Math.round(file.size / 1024)} KB
-                  <button
-                    className="attach-close"
-                    onClick={() => {
-                      const newAttachments = emailData.attachments.filter(
-                        (_, i) => i !== index
+              {/* Payment Reminder */}
+              {activeOption === "payment" && (
+                <div className="auto-section-unique">
+                  <label>Select Template:</label>
+                  <select
+                    className="auto-select-unique"
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      const selectedTemplate = templates.find(
+                        (t) => t._id === selectedId
                       );
-                      setEmailData({
-                        ...emailData,
-                        attachments: newAttachments,
-                      });
+                      if (selectedTemplate)
+                        handlePreviewautomate(selectedTemplate);
                     }}
                   >
-                    X
-                  </button>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <p>No files selected</p>
-          )}
-        </div>
-        <div className="excel-modal-body">
-          <h4>
-            Upload contact list
-            <FaInfoCircle
-              className="info-icon-rule"
-              onClick={() => {
-                setIsRuleOpen(true);
-              }}
-              style={{ cursor: "pointer", marginLeft: "5px" }}
-            />
-          </h4>
-          {/* Modal */}
-          {isRuleOpen && (
-            <div className="rule-modal-overlay">
-              <div className="rule-modal-container">
-                <h3>Steps to Upload a File</h3>
-                <ol>
-                  <li>
-                    The First Name, Last Name, and Email fields are mandatory.
-                  </li>
-                  <li>
-                    All other fields are optional. You can create custom fields
-                    based on your requirements.
-                  </li>
-                </ol>
+                    <option>---Select Template---</option>
+                    {templates.length > 0 ? (
+                      templates.map((template) => (
+                        <option key={template._id} value={template._id}>
+                          {template.temname}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>No templates found</option>
+                    )}
+                  </select>
 
-                <button
-                  onClick={() => setIsRuleOpen(false)}
-                  className="rule-close-button"
-                >
-                  Close
-                </button>
-              </div>
+                  <label htmlFor="aliasName-input">Alias Name:</label>
+                  <input
+                    type="text"
+                    id="aliasName-input"
+                    value={aliasName}
+                    onChange={(e) => setAliasName(e.target.value)}
+                    placeholder="Enter Alias Name"
+                  />
+                  <label htmlFor="subject-input">Subject:</label>
+                  <input
+                    type="text"
+                    id="subject-input"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Enter subject"
+                  />
+                  <label htmlFor="preview-input">Preview Text:</label>
+                  <input
+                    type="text"
+                    id="preview-input"
+                    value={previewtext}
+                    onChange={(e) => setPreviewtext(e.target.value)}
+                    placeholder="Enter Preview Text"
+                  />
+                  {/* Attachment File Input */}
+                  <label htmlFor="attachments">Attach Files(Max-10):</label>
+                  {/* Attachment File Input */}
+                  <input
+                    type="file"
+                    multiple
+                    onChange={(e) => {
+                      const newFiles = Array.from(e.target.files);
+                      const allFiles = [
+                        ...(emailData.attachments || []),
+                        ...newFiles,
+                      ];
+
+                      if (allFiles.length > 10) {
+                        toast.warning("You can only attach up to 10 files.");
+                        return;
+                      }
+
+                      setEmailData({ ...emailData, attachments: allFiles });
+                    }}
+                  />
+
+                  {/* Display Attached Files */}
+                  <div className="file-list">
+                    {emailData.attachments &&
+                    emailData.attachments.length > 0 ? (
+                      <ol>
+                        {emailData.attachments.map((file, index) => (
+                          <li key={index}>
+                            {file.name} - {Math.round(file.size / 1024)} KB
+                            <button
+                              className="attach-close"
+                              onClick={() => {
+                                const newAttachments =
+                                  emailData.attachments.filter(
+                                    (_, i) => i !== index
+                                  );
+                                setEmailData({
+                                  ...emailData,
+                                  attachments: newAttachments,
+                                });
+                              }}
+                            >
+                              X
+                            </button>
+                          </li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <p>No files selected</p>
+                    )}
+                  </div>
+                  <div className="excel-modal-body">
+                    <h4>
+                      Upload contact list
+                      <FaInfoCircle
+                        className="info-icon-rule"
+                        onClick={() => {
+                          setIsRuleOpen(true);
+                        }}
+                        style={{ cursor: "pointer", marginLeft: "5px" }}
+                      />
+                    </h4>
+                    {/* Modal */}
+                    {isRuleOpen && (
+                      <div className="rule-modal-overlay">
+                        <div className="rule-modal-container">
+                          <h3>Steps to Upload a File</h3>
+                          <ol>
+                            <li>
+                              The First Name, Last Name, and Email fields are
+                              mandatory.
+                            </li>
+                            <li>
+                              All other fields are optional. You can create
+                              custom fields based on your requirements.
+                            </li>
+                          </ol>
+
+                          <button
+                            onClick={() => setIsRuleOpen(false)}
+                            className="rule-close-button"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    <img
+                      src={sampleexcel}
+                      alt="Sample Excel Format"
+                      className="sample-excel-image"
+                    />
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <a href="../file/democsvfile.csv" download>
+                        <button className="modal-btn btn-download-sample">
+                          Download Sample csv File
+                        </button>
+                      </a>
+                      <a href="../file/demoexcelfile.xlsx" download>
+                        <button className="modal-btn btn-download-sample">
+                          Download Sample xlsx File
+                        </button>
+                      </a>
+                    </div>
+                    <h4>
+                      Upload excel file
+                      <FaInfoCircle
+                        className="info-icon-rule"
+                        onClick={() => {
+                          setIsRuleOpen(true);
+                        }}
+                        style={{ cursor: "pointer", marginLeft: "5px" }}
+                      />
+                    </h4>
+                    <input
+                      type="file"
+                      accept=".xlsx, .xls"
+                      onChange={handleFileUpload}
+                    />
+                    {fileName && <p>Uploaded File: {fileName}</p>}
+                    {excelData.length > 0 && (
+                      <button
+                        className="excel-modal-view-btn"
+                        onClick={() => {
+                          const table = document.getElementById("excel-table");
+                          table.scrollIntoView({ behavior: "smooth" });
+                        }}
+                      >
+                        Uploaded List
+                      </button>
+                    )}
+                  </div>
+                  {excelData.length > 0 && (
+                    <div className="excel-table-container">
+                      <table id="excel-table">
+                        <thead>
+                          <tr>
+                            {excelData[0].map((header, index) => (
+                              <th key={index}>{header}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {excelData.slice(1).map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                              {row.map((cell, cellIndex) => (
+                                <td key={cellIndex}>{cell}</td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                  <div>
+                    <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
+                    <CustomHourSelect
+                      scheduledTime={scheduledTime}
+                      setScheduledTime={setScheduledTime}
+                    />
+                  </div>
+
+                  <div className="auto-actions-unique">
+                    <button
+                      className="auto-save-unique"
+                      onClick={handlesetpaymentremainder}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <span className="loader-create-remainder"></span> // Spinner
+                      ) : (
+                        "Set Remainder"
+                      )}{" "}
+                    </button>
+                    <button
+                      className="auto-cancel-unique"
+                      onClick={handleCloseModal}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-          <img
-            src={sampleexcel}
-            alt="Sample Excel Format"
-            className="sample-excel-image"
-          />
-          <div style={{ display: "flex", gap: "10px" }}>
-            <a href="../file/democsvfile.csv" download>
-              <button className="modal-btn btn-download-sample">
-                Download Sample csv File
-              </button>
-            </a>
-            <a href="../file/demoexcelfile.xlsx" download>
-              <button className="modal-btn btn-download-sample">
-                Download Sample xlsx File
-              </button>
-            </a>
-          </div>
-          <h4>
-            Upload excel file
-            <FaInfoCircle
-              className="info-icon-rule"
-              onClick={() => {
-                setIsRuleOpen(true);
-              }}
-              style={{ cursor: "pointer", marginLeft: "5px" }}
-            />
-          </h4>
-          <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
-          {fileName && <p>Uploaded File: {fileName}</p>}
-          {excelData.length > 0 && (
-            <button
-              className="excel-modal-view-btn"
-              onClick={() => {
-                const table = document.getElementById("excel-table");
-                table.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Uploaded List
-            </button>
-          )}
-        </div>
-        {excelData.length > 0 && (
-          <div className="excel-table-container">
-            <table id="excel-table">
-              <thead>
-                <tr>
-                  {excelData[0].map((header, index) => (
-                    <th key={index}>{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {excelData.slice(1).map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {row.map((cell, cellIndex) => (
-                      <td key={cellIndex}>{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         )}
-  <div>
-     <label htmlFor="schedule-time">Set Remainder Time:</label>{" "}
-    <CustomHourSelect
-  scheduledTime={scheduledTime}
-  setScheduledTime={setScheduledTime}
-/>
-
-  </div>
-
-
-                <div className="auto-actions-unique">
-                  <button className="auto-save-unique" onClick={handlesetpaymentremainder}
-                  disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <span className="loader-create-remainder" ></span> // Spinner
-                    ) : (
-                      "Set Remainder"
-                    )}{" "}
-                  </button>
-                  <button className="auto-cancel-unique" onClick={handleCloseModal}>
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
         {/* Main Content */}
 
@@ -1281,12 +1310,12 @@ if (existingCampaigns.length > 0) {
               </div>
             )}
 
-               {view === "remainder" && (
+            {view === "remainder" && (
               <div className="card-grid">
-              <div className="cards" onClick={handleselectremainder}>
-  <FaBell className="icons campaign-create-icon" />
-  <span className="card-texts">Create Remainder</span>
-</div>
+                <div className="cards" onClick={handleselectremainder}>
+                  <FaBell className="icons campaign-create-icon" />
+                  <span className="card-texts">Create Remainder</span>
+                </div>
 
                 <div className="cards" onClick={handleremainderhistory}>
                   <FaHistory className="icons campaign-history-icon" />
@@ -1294,22 +1323,19 @@ if (existingCampaigns.length > 0) {
                 </div>
               </div>
             )}
-            
+
             {view === "selectremainder" && (
-  <div className="card-grid">
-    <div className="cards" onClick={handleeditbirthdayremainder}>
-      <FaBirthdayCake className="icons campaign-create-icon" />
-      <span className="card-texts">Birthday Reminder</span>
-    </div>
-    <div className="cards" onClick={handleeditpaymentreminder}>
-      <FaMoneyBillWave className="icons campaign-history-icon" />
-      <span className="card-texts">Payment Reminder</span>
-    </div>
-  </div>
-)}
-
-
-
+              <div className="card-grid">
+                <div className="cards" onClick={handleeditbirthdayremainder}>
+                  <FaBirthdayCake className="icons campaign-create-icon" />
+                  <span className="card-texts">Birthday Reminder</span>
+                </div>
+                <div className="cards" onClick={handleeditpaymentreminder}>
+                  <FaMoneyBillWave className="icons campaign-history-icon" />
+                  <span className="card-texts">Payment Reminder</span>
+                </div>
+              </div>
+            )}
 
             {view === "contact" && (
               <div className="card-grid">
@@ -1341,20 +1367,18 @@ if (existingCampaigns.length > 0) {
                 </div>
               </div>
             )}
-       {view === "addcontact" && (
-  <div className="card-grid">
-    <div className="cards" onClick={handleaddsinglefilecontacts}>
-      <FaUserPlus className="icons contact-create-icon" />
-      <span className="card-texts">Add Single Contact</span>
-    </div>
-    <div className="cards" onClick={handleaddfilecontacts}>
-      <FaUsers className="icons contact-view-icon" />
-      <span className="card-texts">Add Bulk Contact</span>
-    </div>
-  </div>
-)}
-
-
+            {view === "addcontact" && (
+              <div className="card-grid">
+                <div className="cards" onClick={handleaddsinglefilecontacts}>
+                  <FaUserPlus className="icons contact-create-icon" />
+                  <span className="card-texts">Add Single Contact</span>
+                </div>
+                <div className="cards" onClick={handleaddfilecontacts}>
+                  <FaUsers className="icons contact-view-icon" />
+                  <span className="card-texts">Add Bulk Contact</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Show bulk add contact existing group modal */}
@@ -1363,8 +1387,10 @@ if (existingCampaigns.length > 0) {
           )}
           {/* Show single add contact existing group modal */}
 
-            {showfilesingleGroupModal && (
-            <GroupfilesingleModal onClose={() => setShowfilesingleGroupModal(false)} />
+          {showfilesingleGroupModal && (
+            <GroupfilesingleModal
+              onClose={() => setShowfilesingleGroupModal(false)}
+            />
           )}
           {/* Show new group modal    */}
           {showNewGroupModal && (
@@ -1425,8 +1451,8 @@ if (existingCampaigns.length > 0) {
             </div>
           )}
 
-{/* show templates in automation */}
-{isPreviewOpenauto && (
+          {/* show templates in automation */}
+          {isPreviewOpenauto && (
             <div className="preview-modal-overlay-tem">
               <div className="preview-modal-content-tem">
                 {selectedTemplatepre && (
@@ -1802,10 +1828,7 @@ if (existingCampaigns.length > 0) {
             </div>
           )}
 
-
-
-
-{/* show templates sidebar */}
+          {/* show templates sidebar */}
           {isPreviewOpen && (
             <div className="preview-modal-overlay-tem">
               <div className="preview-modal-content-tem">
@@ -2283,17 +2306,17 @@ if (existingCampaigns.length > 0) {
             Templates
           </button>
           <button
-              className="sidebar-button contact-button"
-              onClick={handleRemainderrview}
-            >
-              Remainders
-            </button>
-            <button
-              className="sidebar-button contact-button"
-              onClick={handleOpenModal}
-            >
-              Automation
-            </button>
+            className="sidebar-button contact-button"
+            onClick={handleRemainderrview}
+          >
+            Remainders
+          </button>
+          <button
+            className="sidebar-button contact-button"
+            onClick={handleOpenModal}
+          >
+            Automation
+          </button>
         </div>
       </div>
     </>

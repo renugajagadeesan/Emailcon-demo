@@ -474,7 +474,7 @@ const Readreportremainder = () => {
                 className="overall-modal-read"
                 onClick={() => setShowAnalysisModal(true)}
               >
-                Retarget Analysis
+                Analysis
               </button>
               {/* <button
                 className="overall-cancel"
@@ -500,7 +500,7 @@ const Readreportremainder = () => {
             className="modal-content-read-graph"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="modal-heading-read">Read Retarget Analysis</h2>
+            <h2 className="modal-heading-read">Read Email Analysis</h2>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={processDataForGraph()}>
                 <XAxis dataKey="hour" />

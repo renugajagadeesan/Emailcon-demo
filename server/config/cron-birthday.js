@@ -23,10 +23,14 @@ cron.schedule('0 * * * *', async () => {
         const matchingCampaigns = camhistories.filter(camhistory => {
             const scheduled = new Date(camhistory.scheduledTime);
             return (
-                scheduled.getUTCHours() === currentUTCHour ||
-                scheduled.getUTCMinutes() === currentUTCMinute
+                scheduled.getUTCFullYear() === nowUTC.getUTCFullYear() &&
+                scheduled.getUTCMonth() === nowUTC.getUTCMonth() &&
+                scheduled.getUTCDate() === nowUTC.getUTCDate() &&
+                scheduled.getUTCHours() === nowUTC.getUTCHours() &&
+                scheduled.getUTCMinutes() === nowUTC.getUTCMinutes()
             );
         });
+        
 
         if (matchingCampaigns.length === 0) {
             console.log("No birthday campaigns scheduled for this exact time.");
