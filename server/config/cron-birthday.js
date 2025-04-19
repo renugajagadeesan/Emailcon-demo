@@ -9,8 +9,6 @@ console.log("Cron job started for sending scheduled birthday emails.");
 cron.schedule('*/30 * * * *', async () => {
     try {
         const nowUTC = new Date();
-        const currentUTCHour = nowUTC.getUTCHours();
-        const currentUTCMinute = nowUTC.getUTCMinutes();
         const currentYear = nowUTC.getUTCFullYear();
 
         console.log("Checking birthday campaigns at:", new Date().toLocaleString());
@@ -23,10 +21,7 @@ cron.schedule('*/30 * * * *', async () => {
         const matchingCampaigns = camhistories.filter(camhistory => {
             const scheduled = new Date(camhistory.scheduledTime);
             return (
-                scheduled.getUTCFullYear() === nowUTC.getUTCFullYear() &&
-                scheduled.getUTCMonth() === nowUTC.getUTCMonth() &&
-                scheduled.getUTCDate() === nowUTC.getUTCDate() &&
-                scheduled.getUTCHours() === nowUTC.getUTCHours() &&
+                scheduled.getUTCHours() === nowUTC.getUTCHours() ||
                 scheduled.getUTCMinutes() === nowUTC.getUTCMinutes()
             );
         });
