@@ -393,7 +393,9 @@ const ListPage = ({ onClose }) => {
                               (key) =>
                                 key !== "_id" &&
                                 key !== "group" &&
+                                key !== "lastSentYear" && 
                                 key !== "__v" // Exclude unwanted fields
+                                
                             )
                             .map((key, index) => <th key={index}>{key}</th>)}
                         <th>Action</th>
@@ -420,6 +422,7 @@ const ListPage = ({ onClose }) => {
                               (key) =>
                                 key !== "_id" &&
                                 key !== "group" &&
+                                key !== "lastSentYear" && 
                                 key !== "__v"
                             )
                             .map((key, index) => (
