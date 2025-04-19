@@ -5,7 +5,7 @@ import apiConfig from "../../my-app/src/apiconfig/apiConfig.js";
 
 console.log("Cron job started for sending scheduled payment emails.");
 
-cron.schedule('0 * * * *', async () => {
+cron.schedule('*/30 * * * *', async () => {
     try {
         const nowUTC = new Date();
         const currentUTCHour = nowUTC.getUTCHours();

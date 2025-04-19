@@ -5,13 +5,11 @@ import Student from "../models/Student.js";
 import Group from "../models/Group.js";
 import Campaign from "../models/Campaign.js";
 import Template from "../models/Template.js";
-import User from "../models/User.js"; // Ensure you import the User model
+import User from "../models/User.js";
 import Camhistory from "../models/Camhistory.js";
-// import ExcelStudent from "../models/Excelstudent.js";
 import { decryptPassword } from "../config/encryption.js";
 import EmailOpen from "../models/EmailOpen.js";
 import ClickTracking from "../models/ClickTracking.js";
-// import apiConfig from "../../my-app/src/apiconfig/apiConfig.js";
 
 const router = express.Router();
 
@@ -81,10 +79,10 @@ router.post('/sendtestmail', async (req, res) => {
         },
       });
     } else {
-      transporter = nodemailer.createTransport({
+        transporter = nodemailer.createTransport({
         host: "smtp.hostinger.com",
         port: 465,
-        secure: true, // Use SSL/TLS
+        secure: true, 
         auth: {
           user: email,
           pass: decryptPassword(smtppassword),
@@ -282,8 +280,6 @@ router.post('/sendtestmail', async (req, res) => {
       to: emailData.recipient,
       subject: emailData.subject,
       attachments: Attachments,
-      // replyTo:"megarajan55@gmail.com",
-
 
       html: `
         <html>

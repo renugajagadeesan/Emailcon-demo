@@ -316,7 +316,7 @@ const filteredCampaigns = campaigns.filter((campaign) =>
             ) : (
               <tr>
                 <td colSpan="7" style={{ textAlign: "center" }}>
-                  No Campaign History
+                  No Remainder History
                 </td>
               </tr>
             )}
